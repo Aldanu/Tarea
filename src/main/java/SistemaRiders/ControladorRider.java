@@ -66,23 +66,32 @@ public class ControladorRider {
     }
 
     @PutMapping("/riders/{id}")
-    Rider reemplazarRider(@RequestBody Rider nuevoRider, @PathVariable Long id) {
+    ResponseEntity<?> replaceEmployee(@RequestBody Rider newRider, @PathVariable Long id) throws URISyntaxException {
 
-        return repository.findById(id)
+        Rider updatedRider = repository.findById(id)
                 .map(rider -> {
-                    rider.setNombre(nuevoRider.getNombre());
-                    rider.setEdad(nuevoRider.getEdad());
-                    rider.setCI(nuevoRider.getCI());
+                    rider.setNombre(rider.getNombre());
+                    rider.setEdad(rider.getEdad());
+                    rider.setCI(rider.getCI());
                     return repository.save(rider);
                 })
                 .orElseGet(() -> {
-                    nuevoRider.setId(id);
-                    return repository.save(nuevoRider);
+                    newRider.setId(id);
+                    return repository.save(newRider);
                 });
+
+        Resource<Rider> resource = assembler.toResource(updatedRider);
+
+        return ResponseEntity
+                .created(new URI(resource.getId().expand().getHref()))
+                .body(resource);
     }
 
     @DeleteMapping("/riders/{id}")
-    void borrarRider(@PathVariable Long id) {
+    ResponseEntity<?> deleteRider(@PathVariable Long id) {
+
         repository.deleteById(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
