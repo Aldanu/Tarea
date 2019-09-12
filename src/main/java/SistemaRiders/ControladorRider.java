@@ -1,10 +1,13 @@
 package SistemaRiders;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,8 +47,13 @@ public class ControladorRider {
     }
 
     @PostMapping("/riders")
-    Rider nuevoRider(@RequestBody Rider nuevoRider) {
-        return repository.save(nuevoRider);
+    ResponseEntity<?> newRider(@RequestBody Rider newRider) throws URISyntaxException {
+
+        Resource<Rider> resource = assembler.toResource(repository.save(newRider));
+
+        return ResponseEntity
+                .created(new URI(resource.getId().expand().getHref()))
+                .body(resource);
     }
 
     @GetMapping("/riders/{id}")
