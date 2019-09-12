@@ -1,4 +1,4 @@
-package NominaSueldo;
+package SistemaRiders;
 
 public class RiderNotFoundException extends RuntimeException {
 

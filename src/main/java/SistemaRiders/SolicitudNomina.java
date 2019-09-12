@@ -1,4 +1,4 @@
-package NominaSueldo;
+package SistemaRiders;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

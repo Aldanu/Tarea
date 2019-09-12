@@ -1,10 +1,9 @@
-package NominaSueldo;
+package SistemaRiders;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;
-import org.springframework.stereotype.Component;
 
 public class AsembladorRiderResource implements ResourceAssembler<Rider, Resource<Rider>> {
 

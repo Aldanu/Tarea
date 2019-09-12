@@ -1,4 +1,4 @@
-package NominaSueldo;
+package SistemaRiders;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

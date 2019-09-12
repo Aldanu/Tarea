@@ -1,4 +1,4 @@
-package NominaSueldo;
+package SistemaRiders;
 
 import lombok.Data;
 import javax.persistence.Entity;
