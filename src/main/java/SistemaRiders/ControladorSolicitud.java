@@ -1,7 +1,10 @@
 package SistemaRiders;
 
 import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.ResourceSupport;
 import org.springframework.hateoas.Resources;
+import org.springframework.hateoas.VndErrors;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +42,7 @@ public class ControladorSolicitud {
     Resource<Solicitud> one(@PathVariable Long id) {
         return assembler.toResource(
                 repositorioSolicitud.findById(id)
-                        .orElseThrow(() -> new RepositorioNotFoundException(id)));
+                        .orElseThrow(() -> new SolicitudNotFoundException(id)));
     }
 
     @PostMapping("/solicitud")
@@ -51,5 +54,20 @@ public class ControladorSolicitud {
         return ResponseEntity
                 .created(linkTo(methodOn(ControladorSolicitud.class).one(newSolicitud.getId())).toUri())
                 .body(assembler.toResource(newSolicitud));
+    }
+
+    @DeleteMapping("/solicitud/{id}/cancel")
+    ResponseEntity<ResourceSupport> cancel(@PathVariable Long id) {
+
+        Solicitud solicitud = repositorioSolicitud.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
+
+        if (solicitud.getStatus() == Status.IN_PROGRESS) {
+            solicitud.setStatus(Status.CANCELLED);
+            return ResponseEntity.ok(assembler.toResource(repositorioSolicitud.save(solicitud)));
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.METHOD_NOT_ALLOWED)
+                .body(new VndErrors.VndError("Metodo no definido", "No se puede cancelar una orden en el estado " + solicitud.getStatus() + " status"));
     }
 }
