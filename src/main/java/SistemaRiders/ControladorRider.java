@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
@@ -66,7 +67,7 @@ public class ControladorRider {
     }
 
     @PutMapping("/riders/{id}")
-    ResponseEntity<?> replaceEmployee(@RequestBody Rider newRider, @PathVariable Long id) throws URISyntaxException {
+    ResponseEntity<?> replaceRider(@RequestBody Rider newRider, @PathVariable Long id) throws URISyntaxException {
 
         Rider updatedRider = repository.findById(id)
                 .map(rider -> {
