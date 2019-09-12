@@ -21,8 +21,13 @@ public class ControladorRider {
 
     private final RepositorioRider repository;
 
-    ControladorRider(RepositorioRider repository) {
+    private final AsembladorRiderResource assembler;
+
+    ControladorRider(RepositorioRider repository,
+                       AsembladorRiderResource assembler) {
+
         this.repository = repository;
+        this.assembler = assembler;
     }
 
 
@@ -31,9 +36,7 @@ public class ControladorRider {
     Resources<Resource<Rider>> all() {
 
         List<Resource<Rider>> riders = repository.findAll().stream()
-                .map(rider -> new Resource<>(rider,
-                        linkTo(methodOn(ControladorRider.class).one(rider.getId())).withSelfRel(),
-                        linkTo(methodOn(ControladorRider.class).all()).withRel("employees")))
+                .map(assembler::toResource)
                 .collect(Collectors.toList());
 
         return new Resources<>(riders,
@@ -45,15 +48,13 @@ public class ControladorRider {
         return repository.save(nuevoRider);
     }
 
-    @GetMapping("/employees/{id}")
+    @GetMapping("/riders/{id}")
     Resource<Rider> one(@PathVariable Long id) {
 
-        Rider employee = repository.findById(id)
+        Rider rider = repository.findById(id)
                 .orElseThrow(() -> new RiderNotFoundException(id));
 
-        return new Resource<>(employee,
-                linkTo(methodOn(ControladorRider.class).one(id)).withSelfRel(),
-                linkTo(methodOn(ControladorRider.class).all()).withRel("employees"));
+        return assembler.toResource(rider);
     }
 
     @PutMapping("/riders/{id}")
