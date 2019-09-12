@@ -1,12 +1,13 @@
 package SistemaRiders;
 
-import ch.qos.logback.core.status.Status;
 import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+
 
 @Entity
 @Data
