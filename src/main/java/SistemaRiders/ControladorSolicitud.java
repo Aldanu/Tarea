@@ -68,21 +68,6 @@ public class ControladorSolicitud {
 
         return ResponseEntity
                 .status(HttpStatus.METHOD_NOT_ALLOWED)
-                .body(new VndErrors.VndError("Metodo no definido", "No se puede cancelar una orden en el estado " + solicitud.getStatus()));
-    }
-
-    @PutMapping("/solicitud/{id}/complete")
-    ResponseEntity<ResourceSupport> complete(@PathVariable Long id) {
-
-        Solicitud solicitud = repositorioSolicitud.findById(id).orElseThrow(() -> new SolicitudNotFoundException(id));
-
-        if (solicitud.getStatus() == Status.IN_PROGRESS) {
-            solicitud.setStatus(Status.COMPLETED);
-            return ResponseEntity.ok(assembler.toResource(repositorioSolicitud.save(solicitud)));
-        }
-
-        return ResponseEntity
-                .status(HttpStatus.METHOD_NOT_ALLOWED)
-                .body(new VndErrors.VndError("Method not allowed", "No se puede completar una solicitud en estado " + solicitud.getStatus()));
+                .body(new VndErrors.VndError("Metodo no definido", "No se puede cancelar una orden en el estado " + solicitud.getStatus() + " status"));
     }
 }
